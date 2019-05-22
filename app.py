@@ -22,7 +22,7 @@ def start_tool(teams,team_info):
                 print("{}) {}".format(i+1,v))
             option = int(input("Enter an option from the above as numbers"))
             if option < 1 or option > len(teams):
-                raise ValueError("Options shoudl between the options")
+                raise ValueError("Options should between the options")
             
             title = "Team: {} Stats".format(teams[option-1])
             print(title)
@@ -43,15 +43,15 @@ def start_tool(teams,team_info):
             print("\n")
 
             # Average height of the team.
-            heights = [int(i['height'].split(" ")[0]) for i in team_info[teams[option-1]]]
-            avg_height = sum(heights) / len(team_info[teams[option-1]])
+            heights = [int(i['height']) for i in team_info[teams[option-1]]]
+            avg_height = round(sum(heights) / len(team_info[teams[option-1]]),2)
             print("The average height of the team is  : {}".format(avg_height))
 
             # inexperinced  players on the team :
             inexp = 0
             exp = 0
             for team in team_info[teams[option-1]]:
-                if  team['experience'] == "NO":
+                if  team['experience'] == False:
                     inexp += 1
                 else:
                     exp  += 1
@@ -63,11 +63,11 @@ def start_tool(teams,team_info):
         if err:
             print(err)
         start_tool(teams,team_info)
-    option = input("Do you want to see the stats again?? y or n")
+    option = str(input("Do you want to see the stats again?? y or n"))
     if option.lower() == 'y':
         start_tool(teams,team_info)
     elif option.lower() == 'n':
-        print("Adios!!")
+        print("Adios mate!!")
         return
     else:
         print("NeverMind!!!")
@@ -86,14 +86,19 @@ if __name__ == "__main__":
     # balancing the team with experince
     for player in players:
         player['guardians'] = player['guardians'].split(" and ")
+        if player['experience'] == 'NO':
+            player['experience'] = False
+        else:
+            player['experience'] = True
+        player['height'] = int(player['height'].split(" ")[0])
         if yes_index == len(teams):
             yes_index = 0
         if no_index == len(teams):
             no_index = 0
-        if player['experience'] == "NO":
+        if not player['experience']:
             team_info[teams[no_index]].append(player)
             no_index += 1
-        if player['experience'] == "YES":
+        if player['experience']:
             team_info[teams[yes_index]].append(player)
             yes_index += 1
     start_tool(teams,team_info)
